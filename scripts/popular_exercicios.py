@@ -169,13 +169,29 @@ exercicios = [
 
 db = SessionLocal()
 
-for ex in exercicios:
-    existe = db.query(Exercicio).filter(Exercicio.nome == ex["nome"]).first()
-    if not existe:
-        novo = Exercicio(**ex)
-        db.add(novo)
-
-db.commit()
-db.close()
-
-print(f"✅ {len(exercicios)} exercícios populados com sucesso!")
+try:
+    # Verificar se já existem exercícios
+    total_existentes = db.query(Exercicio).count()
+    print(f"📊 Exercícios existentes no banco: {total_existentes}")
+    
+    novos_exercicios = 0
+    for ex in exercicios:
+        existe = db.query(Exercicio).filter(Exercicio.nome == ex["nome"]).first()
+        if not existe:
+            novo = Exercicio(**ex)
+            db.add(novo)
+            novos_exercicios += 1
+            print(f"➕ Adicionado: {ex['nome']}")
+    
+    db.commit()
+    
+    total_final = db.query(Exercicio).count()
+    print(f"✅ População concluída!")
+    print(f"📈 Novos exercícios adicionados: {novos_exercicios}")
+    print(f"📊 Total de exercícios no banco: {total_final}")
+    
+except Exception as e:
+    print(f"❌ Erro ao popular exercícios: {e}")
+    db.rollback()
+finally:
+    db.close()

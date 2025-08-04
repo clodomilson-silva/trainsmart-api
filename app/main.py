@@ -15,6 +15,47 @@ logger = logging.getLogger(__name__)
 # Cria as tabelas no banco
 Base.metadata.create_all(bind=engine)
 
+# Popular banco de dados no startup (apenas em produção)
+if settings.is_production:
+    try:
+        from .database import SessionLocal
+        from .models import Exercicio, Usuario
+        
+        db = SessionLocal()
+        
+        # Verificar se precisa popular exercícios
+        exercicios_count = db.query(Exercicio).count()
+        logger.info(f"Exercícios no banco: {exercicios_count}")
+        
+        if exercicios_count == 0:
+            logger.info("Banco vazio, populando exercícios...")
+            import subprocess
+            import sys
+            result = subprocess.run([sys.executable, "scripts/popular_exercicios.py"], 
+                                  capture_output=True, text=True)
+            logger.info(f"População resultado: {result.stdout}")
+            if result.stderr:
+                logger.error(f"Erro na população: {result.stderr}")
+        
+        # Verificar se precisa criar admin
+        admin_count = db.query(Usuario).filter(Usuario.is_admin == True).count()
+        logger.info(f"Admins no banco: {admin_count}")
+        
+        if admin_count == 0:
+            logger.info("Nenhum admin encontrado, criando...")
+            import subprocess
+            import sys
+            result = subprocess.run([sys.executable, "scripts/criar_admin.py"], 
+                                  capture_output=True, text=True)
+            logger.info(f"Admin criação resultado: {result.stdout}")
+            if result.stderr:
+                logger.error(f"Erro na criação admin: {result.stderr}")
+        
+        db.close()
+        
+    except Exception as e:
+        logger.error(f"Erro no startup: {e}")
+
 app = FastAPI(
     title="TrainSmart API",
     description="API para exercícios físicos com autenticação e autorização",
