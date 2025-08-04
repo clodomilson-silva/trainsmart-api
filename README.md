@@ -32,8 +32,8 @@ POST /auth/login
 Content-Type: application/json
 
 {
-  "username": "admin",
-  "password": "#Cl271091"
+  "username": "seu_usuario",
+  "password": "sua_senha"
 }
 ```
 
@@ -44,6 +44,8 @@ Content-Type: application/json
   "token_type": "bearer"
 }
 ```
+
+> **⚠️ Nota:** Para obter credenciais de acesso, entre em contato com o administrador do sistema.
 
 ### **Uso do Token**
 ```http
@@ -175,7 +177,7 @@ curl "https://trainsmart-api.onrender.com/exercicios?grupo_muscular=Peito"
 ```bash
 curl -X POST https://trainsmart-api.onrender.com/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"#Cl271091"}'
+  -d '{"username":"seu_usuario","password":"sua_senha"}'
 ```
 
 ### **4. Criar novo exercício (com token)**
@@ -259,13 +261,21 @@ docker-compose up -d
 ```json
 {
   "id": 1,
-  "username": "admin",
-  "email": "admin@trainsmart.com",
-  "is_admin": true
+  "username": "exemplo_usuario",
+  "email": "usuario@exemplo.com",
+  "is_admin": false
 }
 ```
 
 ## 🔒 **Segurança**
+
+### **⚠️ IMPORTANTE - CREDENCIAIS DE ACESSO**
+- **NÃO** compartilhe credenciais de admin publicamente
+- **NÃO** inclua senhas reais em documentação
+- **USE** variáveis de ambiente para dados sensíveis
+- **CONTATE** o administrador para obter acesso
+
+### **🛡️ Medidas de Segurança Implementadas**
 
 - ✅ **JWT Tokens** com expiração
 - ✅ **Hashing bcrypt** para senhas
