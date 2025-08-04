@@ -61,7 +61,7 @@ def root():
         "message": "TrainSmart API - API para exercícios físicos",
         "version": "1.0.0",
         "environment": settings.ENVIRONMENT,
-        "docs": "/docs" if not settings.is_production else "Disabled in production",
+        "docs": "/docs",  # Sempre disponível
         "endpoints": {
             "exercicios": "/exercicios",
             "autenticacao": "/auth",
