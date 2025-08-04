@@ -1,221 +1,310 @@
 # 🏋️ TrainSmart API
 
-## 🎯 Sobre o Projeto
-API REST completa para exercícios físicos com autenticação JWT e autorização baseada em perfis. Ideal para aplicações de fitness, personal trainers e academias.
+Uma API RESTful completa para gerenciamento de exercícios físicos com sistema de autenticação JWT e controle de acesso baseado em roles.
 
-## ⚡ Quick Start
+## 🌐 **API em Produção**
+**Base URL:** `https://trainsmart-api.onrender.com`
 
-### 1. Configuração Inicial
+## 📋 **Índice**
+- [Características](#características)
+- [Autenticação](#autenticação)
+- [Endpoints](#endpoints)
+- [Exemplos de Uso](#exemplos-de-uso)
+- [Instalação Local](#instalação-local)
+- [Deploy](#deploy)
+
+## ✨ **Características**
+
+- 🔐 **Autenticação JWT** com tokens seguros
+- 👥 **Sistema de Roles** (Admin/Público)
+- 💪 **20 exercícios** pré-populados
+- 🔍 **Filtros avançados** por grupo muscular e equipamento
+- 🛡️ **Headers de segurança** (CORS, XSS, CSRF)
+- 📊 **Health checks** para monitoramento
+- 🐳 **Docker** ready
+- 🌐 **Deploy** em produção
+
+## 🔐 **Autenticação**
+
+### **Login**
+```http
+POST /auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "#Cl271091"
+}
+```
+
+**Resposta:**
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer"
+}
+```
+
+### **Uso do Token**
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+## 🎯 **Endpoints**
+
+### **📊 Status e Informações**
+
+#### `GET /` - Informações da API
+```http
+GET https://trainsmart-api.onrender.com/
+```
+
+#### `GET /health` - Health Check
+```http
+GET https://trainsmart-api.onrender.com/health
+```
+
+### **🔐 Autenticação**
+
+#### `POST /auth/login` - Fazer Login
+```http
+POST https://trainsmart-api.onrender.com/auth/login
+Content-Type: application/json
+
+{
+  "username": "string",
+  "password": "string"
+}
+```
+
+#### `POST /auth/register` - Registrar Usuário
+```http
+POST https://trainsmart-api.onrender.com/auth/register
+Content-Type: application/json
+
+{
+  "username": "string",
+  "email": "user@example.com",
+  "password": "string"
+}
+```
+> **⚠️ Nota:** Registro bloqueado em produção por segurança
+
+### **💪 Exercícios**
+
+#### `GET /exercicios` - Listar Exercícios (Público)
+```http
+GET https://trainsmart-api.onrender.com/exercicios
+```
+
+**Parâmetros de Query:**
+- `grupo_muscular` - Filtrar por grupo muscular
+- `equipamento` - Filtrar por equipamento
+- `skip` - Pular registros (paginação)
+- `limit` - Limitar resultados (máximo 100)
+
+**Exemplo:**
+```http
+GET https://trainsmart-api.onrender.com/exercicios?grupo_muscular=Peito&limit=5
+```
+
+#### `POST /exercicios` - Criar Exercício (Admin)
+```http
+POST https://trainsmart-api.onrender.com/exercicios
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "nome": "Supino Reto",
+  "descricao": "Exercício para peitorais",
+  "grupo_muscular": "Peito",
+  "equipamento": "Barra",
+  "nivel": "Iniciante",
+  "gif_url": "https://example.com/gif.gif"
+}
+```
+
+#### `GET /exercicios/{id}` - Buscar Exercício por ID
+```http
+GET https://trainsmart-api.onrender.com/exercicios/1
+```
+
+#### `PUT /exercicios/{id}` - Atualizar Exercício (Admin)
+```http
+PUT https://trainsmart-api.onrender.com/exercicios/1
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "nome": "Supino Inclinado",
+  "descricao": "Exercício para parte superior do peito"
+}
+```
+
+#### `DELETE /exercicios/{id}` - Excluir Exercício (Admin)
+```http
+DELETE https://trainsmart-api.onrender.com/exercicios/1
+Authorization: Bearer <token>
+```
+
+### **📋 Utilitários**
+
+#### `GET /exercicios/grupos-musculares` - Listar Grupos Musculares
+```http
+GET https://trainsmart-api.onrender.com/exercicios/grupos-musculares
+```
+
+#### `GET /exercicios/equipamentos` - Listar Equipamentos
+```http
+GET https://trainsmart-api.onrender.com/exercicios/equipamentos
+```
+
+## 🚀 **Exemplos de Uso**
+
+### **1. Listar todos os exercícios**
 ```bash
-# Clone ou baixe o projeto
-cd trainsmart_api
+curl https://trainsmart-api.onrender.com/exercicios
+```
 
-# Crie ambiente virtual
-python -m venv venv
+### **2. Filtrar exercícios de peito**
+```bash
+curl "https://trainsmart-api.onrender.com/exercicios?grupo_muscular=Peito"
+```
 
-# Ative o ambiente (Windows)
-venv\Scripts\activate
+### **3. Fazer login e obter token**
+```bash
+curl -X POST https://trainsmart-api.onrender.com/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"#Cl271091"}'
+```
 
-# Instale dependências
+### **4. Criar novo exercício (com token)**
+```bash
+curl -X POST https://trainsmart-api.onrender.com/exercicios \
+  -H "Authorization: Bearer <SEU_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome": "Flexão de Braço",
+    "descricao": "Exercício básico para peitorais",
+    "grupo_muscular": "Peito",
+    "equipamento": "Peso Corporal",
+    "nivel": "Iniciante"
+  }'
+```
+
+## 🔧 **Instalação Local**
+
+### **Pré-requisitos**
+- Python 3.11+
+- Git
+
+### **1. Clonar Repositório**
+```bash
+git clone https://github.com/clodomilson-silva/trainsmart-api.git
+cd trainsmart-api
+```
+
+### **2. Instalar Dependências**
+```bash
 pip install -r requirements.txt
 ```
 
-### 2. Configuração do Banco
+### **3. Configurar Ambiente**
 ```bash
-# Crie usuário administrador
-python scripts/criar_admin.py
+cp .env.example .env
+# Edite o arquivo .env com suas configurações
+```
 
-# Popular com exercícios (opcional - já tem 20 exercícios)
+### **4. Inicializar Banco de Dados**
+```bash
+python scripts/criar_admin.py
 python scripts/popular_exercicios.py
 ```
 
-### 3. Executar API
+### **5. Executar API**
 ```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+python -m uvicorn app.main:app --reload
 ```
 
-### 4. Acessar Documentação
-- **Swagger UI:** http://localhost:8000/docs
-- **ReDoc:** http://localhost:8000/redoc
+A API estará disponível em: `http://localhost:8000`
 
-## 🔑 Credenciais Padrão
-- **Username:** admin
-- **Password:** admin123
-- **Email:** admin@trainsmart.com
+## 🐳 **Deploy com Docker**
 
-## 📋 Endpoints Principais
-
-### 🔓 Públicos (GET apenas)
-```
-GET /exercicios/                     # Lista exercícios com filtros
-GET /exercicios/{id}                 # Detalhes de exercício
-GET /exercicios/grupos-musculares    # Lista grupos únicos
-GET /exercicios/equipamentos         # Lista equipamentos únicos
-```
-
-### 🔐 Administrativos (Requer token)
-```
-POST   /exercicios/       # Criar exercício
-PUT    /exercicios/{id}   # Atualizar exercício
-DELETE /exercicios/{id}   # Deletar exercício
-```
-
-### 🔑 Autenticação
-```
-POST /auth/register       # Registrar usuário comum
-POST /auth/register-admin # Registrar admin
-POST /auth/token         # Login (obter JWT)
-```
-
-## 🎛️ Filtros Disponíveis
-```
-?grupo_muscular=Peito              # Filtrar por grupo
-?equipamento=Halteres              # Filtrar por equipamento
-?skip=10&limit=20                  # Paginação
-?grupo_muscular=Pernas&skip=5      # Múltiplos filtros
-```
-
-## 💻 Exemplos de Uso
-
-### Listar exercícios de peito
+### **1. Build da Imagem**
 ```bash
-curl "http://localhost:8000/exercicios/?grupo_muscular=Peito"
+docker-compose build
 ```
 
-### Login de admin
+### **2. Executar Container**
 ```bash
-curl -X POST "http://localhost:8000/auth/token" \
-     -H "Content-Type: application/x-www-form-urlencoded" \
-     -d "username=admin&password=admin123"
+docker-compose up -d
 ```
 
-### Criar exercício (como admin)
-```bash
-curl -X POST "http://localhost:8000/exercicios/" \
-     -H "Authorization: Bearer SEU_TOKEN_AQUI" \
-     -H "Content-Type: application/json" \
-     -d '{
-       "nome": "Novo Exercício",
-       "grupo_muscular": "Braços",
-       "descricao": "Descrição detalhada",
-       "equipamento": "Halteres",
-       "gif_url": "https://exemplo.com/exercicio.gif"
-     }'
+## 📊 **Estrutura de Dados**
+
+### **Exercício**
+```json
+{
+  "id": 1,
+  "nome": "Supino Reto",
+  "descricao": "Exercício para desenvolvimento dos músculos peitorais",
+  "grupo_muscular": "Peito",
+  "equipamento": "Barra",
+  "nivel": "Iniciante",
+  "gif_url": "https://example.com/supino-reto.gif"
+}
 ```
 
-## 🏗️ Arquitetura
-
-```
-📁 app/
-  ├── main.py          # FastAPI app + CORS
-  ├── database.py      # SQLAlchemy config
-  ├── models.py        # Exercicio + Usuario models
-  ├── schemas.py       # Pydantic schemas
-  ├── crud.py          # Database operations
-  ├── auth.py          # JWT authentication
-  ├── utils.py         # Password hashing
-  └── routes/
-      ├── exercicios.py # Exercise endpoints
-      └── auth.py       # Auth endpoints
-
-📁 scripts/
-  ├── popular_exercicios.py # Seed database
-  ├── criar_admin.py       # Create admin user
-  └── test_api.py         # API tests
+### **Usuário**
+```json
+{
+  "id": 1,
+  "username": "admin",
+  "email": "admin@trainsmart.com",
+  "is_admin": true
+}
 ```
 
-## 🔧 Stack Tecnológica
+## 🔒 **Segurança**
 
-- **FastAPI** - Framework web moderno
-- **SQLAlchemy** - ORM Python
-- **JWT** - Autenticação stateless
-- **bcrypt** - Hash seguro de senhas
-- **Pydantic V2** - Validação de dados
-- **SQLite** - Banco de dados (substituível)
+- ✅ **JWT Tokens** com expiração
+- ✅ **Hashing bcrypt** para senhas
+- ✅ **Headers de segurança** (XSS, CSRF, etc.)
+- ✅ **CORS** configurado
+- ✅ **Rate limiting** (planejado)
+- ✅ **HTTPS** obrigatório em produção
 
-## 🛡️ Segurança
+## 📝 **Status Codes**
 
-### Níveis de Acesso
-- **👥 Público:** Apenas leitura (GET)
-- **🔐 Admin:** CRUD completo
+| Código | Descrição |
+|--------|-----------|
+| 200 | Sucesso |
+| 201 | Criado |
+| 400 | Requisição inválida |
+| 401 | Não autorizado |
+| 403 | Proibido |
+| 404 | Não encontrado |
+| 422 | Erro de validação |
+| 500 | Erro interno |
 
-### Recursos de Segurança
-- ✅ Tokens JWT com expiração
-- ✅ Senhas hasheadas com bcrypt
-- ✅ Autorização baseada em roles
-- ✅ CORS configurado
-- ✅ Validação de dados
-
-## 📊 Dados Inclusos
-
-- **20 exercícios** populados
-- **8 grupos musculares**
-- **15 tipos de equipamento**
-- **GIFs demonstrativas** funcionais
-
-## 🧪 Testes
-
-```bash
-# Executar testes automatizados
-python scripts/test_api.py
-```
-
-## 🚀 Deploy
-
-### Docker (Recomendado)
-```dockerfile
-FROM python:3.11-slim
-
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
-EXPOSE 8000
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### Railway/Heroku
-```bash
-# Criar Procfile
-echo "web: uvicorn app.main:app --host 0.0.0.0 --port \$PORT" > Procfile
-```
-
-## 📈 Melhorias Futuras
-
-### 🔧 Técnicas
-- [ ] Variáveis de ambiente
-- [ ] Rate limiting
-- [ ] Logging estruturado
-- [ ] Cache Redis
-- [ ] PostgreSQL
-
-### 🎯 Funcionais
-- [ ] Upload de GIFs
-- [ ] Sistema de favoritos
-- [ ] Histórico de treinos
-- [ ] Recomendações IA
-- [ ] Múltiplos idiomas
-
-## 🤝 Contribuição
+## 🤝 **Contribuindo**
 
 1. Fork o projeto
-2. Crie uma branch: `git checkout -b feature/nova-funcionalidade`
-3. Commit: `git commit -m 'Adiciona nova funcionalidade'`
-4. Push: `git push origin feature/nova-funcionalidade`
+2. Crie uma branch (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -m 'Add: nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
 5. Abra um Pull Request
 
-## 📄 Licença
+## 📄 **Licença**
 
-Este projeto está sob a licença MIT. Veja LICENSE para mais detalhes.
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para detalhes.
 
-## 🆘 Suporte
+## 👨‍💻 **Autor**
 
-- **Documentação:** http://localhost:8000/docs
-- **Issues:** Abra uma issue no repositório
-- **Email:** suporte@trainsmart.com
+**Clodomilson Silva**
+- GitHub: [@clodomilson-silva](https://github.com/clodomilson-silva)
+- Email: clodomilsonanjos.eng@outlook.com
 
 ---
 
-**🎯 Pronto para usar!** Sua API de exercícios está completa e funcionando.
+⭐ **Se este projeto te ajudou, deixe uma estrela!**

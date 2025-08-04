@@ -19,8 +19,8 @@ app = FastAPI(
     title="TrainSmart API",
     description="API para exercícios físicos com autenticação e autorização",
     version="1.0.0",
-    docs_url="/docs",  # Habilita docs sempre
-    redoc_url="/redoc"  # Habilita redoc sempre
+    docs_url=None,  # Desabilitado por segurança em produção
+    redoc_url=None  # Desabilitado por segurança em produção
 )
 
 # Configuração CORS para produção
@@ -61,7 +61,7 @@ def root():
         "message": "TrainSmart API - API para exercícios físicos",
         "version": "1.0.0",
         "environment": settings.ENVIRONMENT,
-        "docs": "/docs",  # Sempre disponível
+        "docs": "Disponível no GitHub README",
         "endpoints": {
             "exercicios": "/exercicios",
             "autenticacao": "/auth",

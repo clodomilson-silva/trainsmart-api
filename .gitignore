@@ -162,3 +162,23 @@ certificates/
 # Temporary files
 *.tmp
 *.temp
+
+# Documentation drafts (manter apenas README.md e API_DOCUMENTATION.md)
+README_*.md
+DEPLOY_*.md
+IMPLEMENTACAO_*.md
+*_COMPLETA.md
+
+# Config files específicos de deploy
+railway.toml
+render.yaml.backup
+
+# Logs directory
+logs/
+
+# Data directory (se vazio)
+data/
+
+# Scripts temporários
+deploy_*.sh
+temp_*.py
