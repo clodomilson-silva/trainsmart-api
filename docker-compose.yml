@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  trainsmart-api:
+    build: .
+    container_name: trainsmart-api
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-dev_key_change_in_production}
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@trainsmart.com}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-#Cl271091}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3000}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./exercicios.db}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - trainsmart-network
+
+  # PostgreSQL para produção (opcional)
+  postgres:
+    image: postgres:15-alpine
+    container_name: trainsmart-postgres
+    environment:
+      POSTGRES_DB: trainsmart
+      POSTGRES_USER: trainsmart
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_this_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - trainsmart-network
+    profiles:
+      - postgres
+
+  # Nginx para proxy reverso (opcional)
+  nginx:
+    image: nginx:alpine
+    container_name: trainsmart-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - trainsmart-api
+    restart: unless-stopped
+    networks:
+      - trainsmart-network
+    profiles:
+      - nginx
+
+volumes:
+  postgres_data:
+
+networks:
+  trainsmart-network:
+    driver: bridge
