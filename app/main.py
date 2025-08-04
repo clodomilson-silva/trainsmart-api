@@ -19,8 +19,8 @@ app = FastAPI(
     title="TrainSmart API",
     description="API para exercícios físicos com autenticação e autorização",
     version="1.0.0",
-    docs_url="/docs" if not settings.is_production else None,  # Desabilita docs em produção
-    redoc_url="/redoc" if not settings.is_production else None
+    docs_url="/docs",  # Habilita docs sempre
+    redoc_url="/redoc"  # Habilita redoc sempre
 )
 
 # Configuração CORS para produção
