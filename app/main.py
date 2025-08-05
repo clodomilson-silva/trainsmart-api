@@ -36,6 +36,16 @@ if settings.is_production:
             logger.info(f"População resultado: {result.stdout}")
             if result.stderr:
                 logger.error(f"Erro na população: {result.stderr}")
+        else:
+            # Atualizar URLs dos GIFs se necessário
+            logger.info("Atualizando URLs dos GIFs...")
+            import subprocess
+            import sys
+            result = subprocess.run([sys.executable, "scripts/atualizar_gifs.py"], 
+                                  capture_output=True, text=True)
+            logger.info(f"Atualização GIFs resultado: {result.stdout}")
+            if result.stderr:
+                logger.error(f"Erro na atualização GIFs: {result.stderr}")
         
         # Verificar se precisa criar admin
         admin_count = db.query(Usuario).filter(Usuario.is_admin == True).count()

@@ -30,7 +30,7 @@ exercicios = [
         "grupo_muscular": "Peito",
         "descricao": "Abra os braços com halteres e traga-os de volta acima do peito.",
         "equipamento": "Halteres e banco",
-        "gif_url": "https://www.hipertrofia.org/blog/wp-content/uploads/2023/09/dumbbell-fly.gif"
+        "gif_url": "https://www.mundoboaforma.com.br/wp-content/uploads/2019/11/03081301-crucifixo-com-halteres.gif"
     },
 
     # Costas
@@ -39,7 +39,7 @@ exercicios = [
         "grupo_muscular": "Costas",
         "descricao": "Puxe a barra da polia até a parte superior do peito.",
         "equipamento": "Polia alta",
-        "gif_url": "https://i.pinimg.com/originals/7e/d3/fd/7ed3fd50a771c125a2fe8adcf3b7eae4.gif"
+        "gif_url": "https://www.mundoboaforma.com.br/wp-content/uploads/2020/12/costas-puxada-aberta-com-barra-no-pulley.gif"
     },
     {
         "nome": "Remada Curvada",
@@ -53,7 +53,7 @@ exercicios = [
         "grupo_muscular": "Costas",
         "descricao": "Levante a barra do chão mantendo a coluna neutra e suba em pé.",
         "equipamento": "Barra olímpica",
-        "gif_url": "https://www.hipertrofia.org/blog/wp-content/uploads/2017/11/barbell-deadlift.gif"
+        "gif_url": "https://www.mundoboaforma.com.br/wp-content/uploads/2020/12/pernas-e-costas-levantamento-terra-deadlift.gif"
     },
 
     # Pernas
@@ -99,7 +99,7 @@ exercicios = [
         "grupo_muscular": "Bíceps",
         "descricao": "Flexione os cotovelos com halteres em posição neutra.",
         "equipamento": "Halteres",
-        "gif_url": "https://www.hipertrofia.org/blog/wp-content/uploads/2023/04/dumbbell-hammer-curl-v-2.gif"
+        "gif_url": "https://www.mundoboaforma.com.br/wp-content/uploads/2020/12/rosca-biceps-martelo-com-halteres.gif"
     },
 
     # Tríceps
@@ -131,7 +131,7 @@ exercicios = [
         "grupo_muscular": "Ombros",
         "descricao": "Empurre os halteres acima da cabeça mantendo controle.",
         "equipamento": "Halteres",
-        "gif_url": "https://www.treinoemalta.com.br/wp-content/uploads/2023/07/Desenvolvimento-com-Halteres-H.gif"
+        "gif_url": "https://www.mundoboaforma.com.br/wp-content/uploads/2020/12/desenvolvimento-para-ombros-com-halteres.gif"
     },
 
     # Abdômen
@@ -140,7 +140,7 @@ exercicios = [
         "grupo_muscular": "Abdômen",
         "descricao": "Fique apoiado nos cotovelos e pontas dos pés mantendo o corpo reto.",
         "equipamento": "Peso corporal",
-        "gif_url": "https://newlabsvita.com.br/wp-content/uploads/2017/08/Prancha-Treinamento-Funcional.jpg"
+        "gif_url": "https://www.mundoboaforma.com.br/wp-content/uploads/2020/11/01431301-Bridge-straight-arm_Waist_360_logo.gif"
     },
     {
         "nome": "Abdominal Supra",
